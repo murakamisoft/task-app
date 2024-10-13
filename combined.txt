@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import TaskForm from './components/TaskForm';
-import TaskList from './components//TaskList';
+import TaskList from './components/TaskList';
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
-  const [taskName, setTaskName] = useState('');
+  const [title, setTitle] = useState(''); // 修正: taskName → title
   const [taskId, setTaskId] = useState(null);
 
   const fetchTasks = async () => {
@@ -22,7 +22,7 @@ const App = () => {
   };
 
   const handleEdit = (task) => {
-    setTaskName(task.name);
+    setTitle(task.title); // 修正: task.name → task.title
     setTaskId(task.id);
   };
 
@@ -37,8 +37,8 @@ const App = () => {
         fetchTasks={fetchTasks}
         taskId={taskId}
         setTaskId={setTaskId}
-        taskName={taskName}
-        setTaskName={setTaskName}
+        title={title} // 修正: taskName → title
+        setTitle={setTitle} // 修正: setTaskName → setTitle
       />
       <h2 className="mt-4">タスクリスト</h2>
       <TaskList
@@ -53,19 +53,18 @@ const App = () => {
 export default App;
    
 ----- C:\workspace\task-app\src\components\TaskForm.jsx ----- 
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const TaskForm = ({ fetchTasks, taskId, setTaskId, taskName, setTaskName }) => {
+const TaskForm = ({ fetchTasks, taskId, setTaskId, title, setTitle }) => { // 修正: taskName → title, setTaskName → setTitle
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (taskName) {
+    if (title) { // 修正: taskName → title
       if (taskId) {
-        await axios.put(`http://localhost:8080/tasks/${taskId}`, { name: taskName });
+        await axios.put(`http://localhost:8080/tasks/${taskId}`, { title }); // 修正: name → title
       } else {
-        await axios.post('http://localhost:8080/tasks', { name: taskName });
+        await axios.post('http://localhost:8080/tasks', { title }); // 修正: name → title
       }
-      setTaskName('');
+      setTitle(''); // 修正: setTaskName → setTitle
       setTaskId(null);
       fetchTasks();
     }
@@ -74,13 +73,13 @@ const TaskForm = ({ fetchTasks, taskId, setTaskId, taskName, setTaskName }) => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group">
-        <label htmlFor="taskName">タスク名:</label>
+        <label htmlFor="taskTitle">タスク名:</label> {/* 修正: htmlForをtaskTitleに変更 */}
         <input
           type="text"
           className="form-control"
-          id="taskName"
-          value={taskName}
-          onChange={(e) => setTaskName(e.target.value)}
+          id="taskTitle" // 修正: idをtaskTitleに変更
+          value={title} // 修正: taskName → title
+          onChange={(e) => setTitle(e.target.value)} // 修正: setTaskName → setTitle
           required
         />
       </div>
@@ -101,7 +100,7 @@ const TaskList = ({ tasks, handleEdit, handleDelete }) => {
     <ul className="list-group mt-2">
       {tasks.map((task) => (
         <li key={task.id} className="list-group-item d-flex justify-content-between align-items-center">
-          {task.name}
+          {task.title} {/* 修正: task.name → task.title */}
           <div>
             <button onClick={() => handleEdit(task)} className="btn btn-warning btn-sm mr-2">
               編集

@@ -1,70 +1,89 @@
-# Getting Started with Create React App
+# タスク管理アプリケーション
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+このアプリケーションは、Reactを使用して構築された簡単なタスク管理システムです。タスクの追加、編集、削除を行うことができ、バックエンドAPIとの通信は `axios` を使用しています。
 
-## Available Scripts
+## 機能
 
-In the project directory, you can run:
+- タスクの作成
+- タスクの編集
+- タスクの削除
+- タスクのリスト表示
 
-### `npm start`
+## 技術スタック
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- フロントエンド: React, Bootstrap
+- バックエンド: REST API (ローカルホストで動作)
+- HTTPクライアント: Axios
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 使い方
 
-### `npm test`
+### 1. 環境のセットアップ
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+まず、リポジトリをクローンし、依存関係をインストールします。
 
-### `npm run build`
+```bash
+git clone https://github.com/your-repo/task-app.git
+cd task-app
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 2. アプリケーションの起動
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+フロントエンドアプリケーションを起動します。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm start
+```
 
-### `npm run eject`
+アプリケーションは `http://localhost:3000` で起動します。
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 3. バックエンドAPIのセットアップ
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+このアプリケーションはバックエンドのタスク管理APIに依存しています。バックエンドが起動していることを確認し、APIが `http://localhost:8080` で利用できる状態にしてください。
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+APIのエンドポイント:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- GET `http://localhost:8080/tasks` - タスクリストを取得
+- POST `http://localhost:8080/tasks` - 新しいタスクを作成
+- PUT `http://localhost:8080/tasks/:id` - タスクを更新
+- DELETE `http://localhost:8080/tasks/:id` - タスクを削除
 
-## Learn More
+## コンポーネント概要
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### `App.jsx`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- アプリケーション全体を管理するメインコンポーネント。
+- タスクの一覧表示、追加、編集、削除のロジックを提供。
+- `TaskForm` と `TaskList` の2つのコンポーネントを使用して、UIを構築。
 
-### Code Splitting
+### `TaskForm.jsx`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- 新しいタスクの作成、または既存タスクの編集を行うフォーム。
+- タスク名を入力し、送信ボタンを押すことで、バックエンドAPIにリクエストを送信。
+- 編集時にはタスクのタイトルがフォームに自動で反映されます。
 
-### Analyzing the Bundle Size
+### `TaskList.jsx`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- タスクのリストを表示するコンポーネント。
+- 各タスクごとに「編集」と「削除」のボタンがあり、対応する機能を提供。
 
-### Making a Progressive Web App
+## インストール済みパッケージ
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- React
+- Axios
+- Bootstrap
 
-### Advanced Configuration
+## カスタマイズ
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+必要に応じて、タスクの項目（タイトル以外の情報を追加したい場合など）やスタイルをカスタマイズできます。
 
-### Deployment
+1. `TaskForm.jsx` 内のフォームに新しいフィールドを追加します。
+2. バックエンドAPIのエンドポイントを変更して、必要なデータを送受信できるようにします。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 注意
 
-### `npm run build` fails to minify
+- アプリケーションはローカルホストでの動作を前提としています。デプロイする際には、CORSの設定や、APIのエンドポイントを環境に合わせて変更する必要があります。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## ライセンス
+
+このプロジェクトはMITライセンスの下で公開されています。詳細は `LICENSE` ファイルをご確認ください。
