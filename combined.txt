@@ -1,0 +1,120 @@
+以下が最新のソース一覧
+----- C:\workspace\task-app\src\App.jsx ----- 
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import TaskForm from './components/TaskForm';
+import TaskList from './components//TaskList';
+
+const App = () => {
+  const [tasks, setTasks] = useState([]);
+  const [taskName, setTaskName] = useState('');
+  const [taskId, setTaskId] = useState(null);
+
+  const fetchTasks = async () => {
+    const response = await axios.get('http://localhost:8080/tasks');
+    setTasks(response.data);
+  };
+
+  const handleDelete = async (id) => {
+    await axios.delete(`http://localhost:8080/tasks/${id}`);
+    fetchTasks();
+  };
+
+  const handleEdit = (task) => {
+    setTaskName(task.name);
+    setTaskId(task.id);
+  };
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  return (
+    <div className="container mt-5">
+      <h1>タスク管理</h1>
+      <TaskForm
+        fetchTasks={fetchTasks}
+        taskId={taskId}
+        setTaskId={setTaskId}
+        taskName={taskName}
+        setTaskName={setTaskName}
+      />
+      <h2 className="mt-4">タスクリスト</h2>
+      <TaskList
+        tasks={tasks}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+      />
+    </div>
+  );
+};
+
+export default App;
+   
+----- C:\workspace\task-app\src\components\TaskForm.jsx ----- 
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const TaskForm = ({ fetchTasks, taskId, setTaskId, taskName, setTaskName }) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (taskName) {
+      if (taskId) {
+        await axios.put(`http://localhost:8080/tasks/${taskId}`, { name: taskName });
+      } else {
+        await axios.post('http://localhost:8080/tasks', { name: taskName });
+      }
+      setTaskName('');
+      setTaskId(null);
+      fetchTasks();
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label htmlFor="taskName">タスク名:</label>
+        <input
+          type="text"
+          className="form-control"
+          id="taskName"
+          value={taskName}
+          onChange={(e) => setTaskName(e.target.value)}
+          required
+        />
+      </div>
+      <button type="submit" className="btn btn-primary mt-2">
+        {taskId ? 'タスクを更新' : 'タスクを追加'}
+      </button>
+    </form>
+  );
+};
+
+export default TaskForm;
+   
+----- C:\workspace\task-app\src\components\TaskList.jsx ----- 
+import React from 'react';
+
+const TaskList = ({ tasks, handleEdit, handleDelete }) => {
+  return (
+    <ul className="list-group mt-2">
+      {tasks.map((task) => (
+        <li key={task.id} className="list-group-item d-flex justify-content-between align-items-center">
+          {task.name}
+          <div>
+            <button onClick={() => handleEdit(task)} className="btn btn-warning btn-sm mr-2">
+              編集
+            </button>
+            <button onClick={() => handleDelete(task.id)} className="btn btn-danger btn-sm">
+              削除
+            </button>
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default TaskList;
+   
